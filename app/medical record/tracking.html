@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Record Tracker - Tracking</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Dyslexic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Activity & Nutrition Tracking</h1>
+            <p>Track your daily activities and nutrition</p>
+        </header>
+
+        <div class="tracking-container">
+            <!-- Exercise Tracking -->
+            <section class="tracking-section">
+                <h2>Exercise Tracker</h2>
+                <form id="exerciseForm" class="tracking-form">
+                    <div class="form-group">
+                        <label for="steps">Daily Steps:</label>
+                        <input type="number" id="steps" name="steps" min="0" autofocus>
+                    </div>
+                    <button type="submit" class="btn-secondary">Log Steps</button>
+                </form>
+                <div id="exerciseNotification" class="notification"></div>
+            </section>
+
+            <!-- Calorie Tracking -->
+            <section class="tracking-section">
+                <h2>Calorie Tracker</h2>
+                <form id="calorieForm" class="tracking-form">
+                    <div class="form-group">
+                        <label for="ingredients">Ingredients (comma-separated):</label>
+                        <textarea id="ingredients" name="ingredients" placeholder="e.g., apple, chicken breast, rice"></textarea>
+                    </div>
+                    <button type="submit" class="btn-secondary">Calculate Calories</button>
+                </form>
+                <div id="calorieResult" class="result-display"></div>
+            </section>
+
+            <!-- Medical Chatbot -->
+            <section class="tracking-section">
+                <h2>Medical Assistant</h2>
+                <div class="chatbot-container">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message bot">
+                            <strong>Medical Assistant:</strong> Hello! I'm here to help with basic health questions. Please describe your symptoms.
+                        </div>
+                    </div>
+                    <form id="chatForm" class="chat-input">
+                        <input type="text" id="symptomInput" placeholder="Describe your symptoms...">
+                        <button type="submit" class="btn-primary">Send</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Navigation Icons -->
+    <nav class="bottom-nav">
+        <div class="nav-icon" onclick="window.location.href='index.html'">
+            <span>🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='profile.html'">
+            <span>👤</span>
+            <span class="nav-label">Profile</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='health.html'">
+            <span>❤️</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-icon active">
+            <span>📊</span>
+            <span class="nav-label">Tracking</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='settings.html'">
+            <span>⚙️</span>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+
+    <script src="tracking.js"></script>
+</body>
+</html> 

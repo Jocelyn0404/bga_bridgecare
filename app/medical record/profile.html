@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Record Tracker - Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Dyslexic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Profile Setup</h1>
+            <p>Please provide your basic information</p>
+        </header>
+
+        <div class="profile-container">
+            <form id="profileForm" class="profile-form">
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required autofocus>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="1" max="120" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Profile</button>
+            </form>
+
+            <div id="ageReminder" class="reminder" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Icons -->
+    <nav class="bottom-nav">
+        <div class="nav-icon" onclick="window.location.href='index.html'">
+            <span>🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-icon active">
+            <span>👤</span>
+            <span class="nav-label">Profile</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='health.html'">
+            <span>❤️</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='tracking.html'">
+            <span>📊</span>
+            <span class="nav-label">Tracking</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='settings.html'">
+            <span>⚙️</span>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+
+    <script src="profile.js"></script>
+</body>
+</html> 

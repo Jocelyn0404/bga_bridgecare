@@ -1,0 +1,525 @@
+# BRIDGECARE MEDICAL APPLICATION - SYSTEM ARCHITECTURE
+
+================================================================================
+                    BRIDGECARE MEDICAL APPLICATION
+                        SYSTEM ARCHITECTURE DOCUMENT
+================================================================================
+
+Version: 1.0
+Date: August 2024
+Project: BridgeCare - Medical Records & Care Management System
+
+================================================================================
+                                TABLE OF CONTENTS
+================================================================================
+
+1. SYSTEM OVERVIEW
+2. FRONTEND ARCHITECTURE
+3. BACKEND ARCHITECTURE
+4. DATABASE ARCHITECTURE
+5. EXTERNAL API INTEGRATIONS
+6. SECURITY ARCHITECTURE
+7. DATA FLOW ARCHITECTURE
+8. SCALABILITY CONSIDERATIONS
+9. DEPLOYMENT ARCHITECTURE
+10. TECHNOLOGY STACK
+11. FILE STRUCTURE
+12. COMPONENT ARCHITECTURE
+
+================================================================================
+                            1. SYSTEM OVERVIEW
+================================================================================
+
+BridgeCare is a comprehensive medical application that combines modern React/Next.js 
+technology with advanced healthcare management features for elderly care, family 
+coordination, and medical staff operations.
+
+CORE FEATURES:
+- Multi-role Support (Elderly patients, Family members, Medical staff)
+- Role-based Access Control (RBAC)
+- Real-time Data Synchronization
+- Elderly Mode with Accessibility Features
+- Hospital Integration System
+- Transportation Coordination (Grab API)
+- Parent-Child Account Linking & Control
+- Medical Records Management
+- Appointment Scheduling & Management
+
+================================================================================
+                          2. FRONTEND ARCHITECTURE
+================================================================================
+
+FRAMEWORK: Next.js 15 + React 19 + TypeScript
+
+UI FRAMEWORK:
+- Tailwind CSS (Utility-first styling)
+- Framer Motion (Animations)
+- Lucide React (Icons)
+
+STATE MANAGEMENT:
+- React Context API (AppContext)
+- Local Storage (User preferences, session data)
+- useState/useEffect hooks for component state
+
+ROUTING:
+- Next.js App Router
+- Dynamic routing for user-specific pages
+- Protected routes based on user roles
+
+RESPONSIVE DESIGN:
+- Mobile-first approach
+- Elderly Mode with larger fonts and buttons
+- Accessibility features (voice playback, high contrast)
+
+KEY COMPONENTS:
+- UnifiedDashboard.tsx (Main dashboard orchestrator)
+- LoginSignup.tsx (Authentication)
+- PatientAppointments.tsx (Patient appointment interface)
+- MedicalStaffAppointments.tsx (Doctor appointment management)
+- ElderlyModeHome.tsx (Elderly-specific home screen)
+- TransportCoordination.tsx (Transport booking modal)
+- CaregiverAccessRequest.tsx (Family member access requests)
+
+================================================================================
+                          3. BACKEND ARCHITECTURE
+================================================================================
+
+API FRAMEWORK: Next.js API Routes
+
+API STRUCTURE:
+/app/api/
+├── medical/route.ts (Medical data endpoints)
+└── [future endpoints for user management, appointments, etc.]
+
+DATA LAYER:
+- Mock services (simulating real backend)
+- Service files in /app/services/
+  - grabApi.ts (Transportation API)
+  - accessControl.ts (Access management)
+  - blockchainService.ts (Audit logging)
+
+AUTHENTICATION:
+- Local storage-based session management
+- Context state for user authentication
+- Role-based access control
+
+REAL-TIME UPDATES:
+- Client-side state management
+- Context API for global state
+- useEffect hooks for data synchronization
+
+================================================================================
+                          4. DATABASE ARCHITECTURE
+================================================================================
+
+DATABASE TYPE: PostgreSQL (Production) / SQLite (Development)
+
+4.1 USER MANAGEMENT DATABASE
+
+Users Table:
++----------------+------------------+------+-----+---------+----------------+
+| Field          | Type             | Null | Key | Default | Extra          |
++----------------+------------------+------+-----+---------+----------------+
+| id             | VARCHAR(255)     | NO   | PRI | NULL    |                |
+| username       | VARCHAR(100)     | NO   |     | NULL    |                |
+| email          | VARCHAR(255)     | NO   | UNI | NULL    |                |
+| password       | VARCHAR(255)     | NO   |     | NULL    | (hashed)       |
+| role           | ENUM             | NO   |     | NULL    | patient/medical_staff/family_member |
+| linkedPatientId| VARCHAR(255)     | YES  | FK  | NULL    | (to users.id)  |
+| organization   | VARCHAR(255)     | YES  |     | NULL    |                |
+| staffId        | VARCHAR(100)     | YES  |     | NULL    |                |
+| isElderly      | BOOLEAN          | YES  |     | FALSE   |                |
+| gender         | ENUM             | YES  |     | NULL    | male/female    |
+| age            | INTEGER          | YES  |     | NULL    |                |
+| weight         | DECIMAL(5,2)     | YES  |     | NULL    | (kg)           |
+| height         | DECIMAL(5,2)     | YES  |     | NULL    | (cm)           |
+| bmi            | DECIMAL(4,2)     | YES  |     | NULL    |                |
+| medicalConditions| JSON           | YES  |     | NULL    |                |
+| healthMetrics  | JSON             | YES  |     | NULL    |                |
+| tracking       | JSON             | YES  |     | NULL    |                |
+| onboardingCompleted| BOOLEAN      | NO   |     | FALSE   |                |
+| createdAt      | TIMESTAMP        | NO   |     | NOW()   |                |
+| updatedAt      | TIMESTAMP        | NO   |     | NOW()   |                |
++----------------+------------------+------+-----+---------+----------------+
+
+4.2 MEDICAL RECORDS DATABASE
+
+Medical Records Table:
++----------------+------------------+------+-----+---------+----------------+
+| Field          | Type             | Null | Key | Default | Extra          |
++----------------+------------------+------+-----+---------+----------------+
+| id             | VARCHAR(255)     | NO   | PRI | NULL    |                |
+| patientId      | VARCHAR(255)     | NO   | FK  | NULL    | (to users.id)  |
+| hospitalId     | VARCHAR(255)     | NO   | FK  | NULL    | (to hospitals.id) |
+| doctorId       | VARCHAR(255)     | NO   | FK  | NULL    | (to users.id)  |
+| visitDate      | TIMESTAMP        | NO   |     | NULL    |                |
+| visitType      | ENUM             | NO   |     | NULL    | checkup/consultation/surgery/emergency/followup |
+| diagnosis      | TEXT             | NO   |     | NULL    |                |
+| symptoms       | JSON             | YES  |     | NULL    |                |
+| treatment      | TEXT             | NO   |     | NULL    |                |
+| notes          | TEXT             | YES  |     | NULL    |                |
+| nextAppointment| TIMESTAMP        | YES  |     | NULL    |                |
+| createdAt      | TIMESTAMP        | NO   |     | NOW()   |                |
+| updatedAt      | TIMESTAMP        | NO   |     | NOW()   |                |
++----------------+------------------+------+-----+---------+----------------+
+
+4.3 APPOINTMENT MANAGEMENT DATABASE
+
+Appointments Table:
++----------------+------------------+------+-----+---------+----------------+
+| Field          | Type             | Null | Key | Default | Extra          |
++----------------+------------------+------+-----+---------+----------------+
+| id             | VARCHAR(255)     | NO   | PRI | NULL    |                |
+| patientId      | VARCHAR(255)     | NO   | FK  | NULL    | (to users.id)  |
+| hospitalId     | VARCHAR(255)     | NO   | FK  | NULL    | (to hospitals.id) |
+| doctorId       | VARCHAR(255)     | NO   | FK  | NULL    | (to users.id)  |
+| appointmentDate| TIMESTAMP        | NO   |     | NULL    |                |
+| appointmentTime| VARCHAR(10)      | NO   |     | NULL    | (HH:MM format) |
+| appointmentType| ENUM             | NO   |     | NULL    | checkup/consultation/surgery/followup/emergency |
+| status         | ENUM             | NO   |     | scheduled | scheduled/confirmed/in-progress/completed/cancelled/urgent |
+| notes          | TEXT             | YES  |     | NULL    |                |
+| estimatedDuration| INTEGER        | NO   |     | 30      | (minutes)      |
+| requiresTransport| BOOLEAN        | NO   |     | FALSE   |                |
+| createdAt      | TIMESTAMP        | NO   |     | NOW()   |                |
+| updatedAt      | TIMESTAMP        | NO   |     | NOW()   |                |
++----------------+------------------+------+-----+---------+----------------+
+
+4.4 TRANSPORTATION DATABASE
+
+Transport Details Table:
++----------------+------------------+------+-----+---------+----------------+
+| Field          | Type             | Null | Key | Default | Extra          |
++----------------+------------------+------+-----+---------+----------------+
+| id             | VARCHAR(255)     | NO   | PRI | NULL    |                |
+| appointmentId  | VARCHAR(255)     | NO   | FK  | NULL    | (to appointments.id) |
+| pickupAddress  | TEXT             | NO   |     | NULL    |                |
+| dropoffAddress | TEXT             | NO   |     | NULL    |                |
+| pickupTime     | TIMESTAMP        | NO   |     | NULL    |                |
+| estimatedReturnTime| TIMESTAMP    | NO   |     | NULL    |                |
+| actualReturnTime| TIMESTAMP       | YES  |     | NULL    |                |
+| transportProvider| ENUM           | NO   |     | NULL    | grab/uber/taxi/family/ambulance |
+| transportStatus| ENUM             | NO   |     | scheduled | scheduled/en-route/picked-up/at-hospital/returning/completed |
+| driverName     | VARCHAR(255)     | YES  |     | NULL    |                |
+| vehicleNumber  | VARCHAR(50)      | YES  |     | NULL    |                |
+| createdAt      | TIMESTAMP        | NO   |     | NOW()   |                |
+| updatedAt      | TIMESTAMP        | NO   |     | NOW()   |                |
++----------------+------------------+------+-----+---------+----------------+
+
+================================================================================
+                       5. EXTERNAL API INTEGRATIONS
+================================================================================
+
+5.1 GRAB API INTEGRATION
+Service File: /app/services/grabApi.ts
+
+Features:
+- Transportation booking
+- Real-time driver tracking
+- Payment processing (MYR currency)
+- Estimated arrival times
+- Driver location updates
+- Booking status management
+
+5.2 BLOCKCHAIN SERVICE (MOCKED)
+Service File: /app/services/blockchainService.ts
+
+Features:
+- Access control logging
+- Transaction IDs generation
+- Audit trails
+- Immutable records
+- Blockchain transaction simulation
+
+5.3 TEXT-TO-SPEECH API
+Features:
+- Voice playback for elderly mode
+- Screen reader compatibility
+- Audio notifications
+- Accessibility enhancement
+
+================================================================================
+                          6. SECURITY ARCHITECTURE
+================================================================================
+
+6.1 AUTHENTICATION & AUTHORIZATION
+
+Authentication Methods:
+- JWT tokens (planned for production)
+- Session-based authentication (current implementation)
+- Password hashing (bcrypt)
+- Multi-factor authentication (planned)
+
+Authorization:
+- Role-based access control (RBAC)
+- User role validation
+- Permission-based access
+- Session management
+
+6.2 DATA PROTECTION
+
+Encryption:
+- Data in transit (HTTPS/TLS)
+- Data at rest (database encryption)
+- Password hashing
+- API key encryption
+
+Compliance:
+- HIPAA compliance considerations
+- GDPR compliance (planned)
+- Data privacy regulations
+- Audit logging
+
+================================================================================
+                        7. DATA FLOW ARCHITECTURE
+================================================================================
+
+7.1 USER INTERACTION FLOW
+
+User Input → UI Components → Context State → API Routes → Database
+     ↓
+Real-time Updates ← State Management ← External APIs ← External Services
+
+7.2 APPOINTMENT FLOW
+
+1. Patient creates appointment
+2. System validates availability
+3. Doctor receives notification
+4. Doctor approves/rejects
+5. Patient receives confirmation
+6. Transport coordination (if needed)
+7. Real-time status updates
+
+7.3 TRANSPORTATION FLOW
+
+1. Appointment triggers transport need
+2. System checks elderly/family preferences
+3. Grab API integration
+4. Real-time tracking
+5. Status updates to all parties
+6. Return trip coordination
+
+================================================================================
+                      8. SCALABILITY CONSIDERATIONS
+================================================================================
+
+8.1 DATABASE SCALING
+
+Production Database:
+- PostgreSQL with read replicas
+- Connection pooling
+- Database indexing strategies
+- Query optimization
+- Data partitioning (planned)
+
+8.2 API SCALING
+
+API Design:
+- RESTful API architecture
+- Rate limiting
+- Caching strategies
+- Load balancing
+- Microservices architecture (planned)
+
+8.3 REAL-TIME FEATURES
+
+Real-time Updates:
+- WebSocket integration (planned)
+- Server-sent events
+- Push notifications
+- Live tracking updates
+- Real-time notifications
+
+================================================================================
+                       9. DEPLOYMENT ARCHITECTURE
+================================================================================
+
+9.1 PRODUCTION ENVIRONMENT
+
+Frontend Deployment:
+- Platform: Vercel/Netlify
+- CDN: Global content delivery
+- SSL: HTTPS encryption
+- CI/CD: Automated deployment
+
+Backend Deployment:
+- Platform: Node.js servers
+- Container: Docker (planned)
+- Orchestration: Kubernetes (planned)
+- Load Balancer: Nginx/AWS ALB
+
+Database:
+- Platform: AWS RDS/Azure Database
+- Backup: Automated backups
+- Monitoring: Database performance
+- Scaling: Auto-scaling
+
+9.2 DEVELOPMENT ENVIRONMENT
+
+Local Development:
+- Node.js runtime
+- Next.js development server
+- Hot reloading
+- Mock services
+- Local database (SQLite)
+
+================================================================================
+                           10. TECHNOLOGY STACK
+================================================================================
+
+10.1 FRONTEND TECHNOLOGIES
+
+Core Framework:
+- Next.js 15 (React framework)
+- React 19 (UI library)
+- TypeScript 5.2 (Type safety)
+
+Styling & UI:
+- Tailwind CSS 3.3 (Utility-first CSS)
+- Framer Motion 11.0 (Animations)
+- Lucide React 0.292 (Icons)
+
+State Management:
+- React Context API
+- useState/useEffect hooks
+- Local Storage
+
+10.2 BACKEND TECHNOLOGIES
+
+Runtime:
+- Node.js 18+
+- Next.js API Routes
+
+Database:
+- PostgreSQL (Production)
+- SQLite (Development)
+
+Authentication:
+- JWT (planned)
+- Session management
+
+10.3 DEVELOPMENT TOOLS
+
+Build Tools:
+- Next.js build system
+- TypeScript compiler
+- ESLint (Code linting)
+- PostCSS (CSS processing)
+
+Package Management:
+- npm (Node package manager)
+- package.json (Dependencies)
+
+================================================================================
+                            11. FILE STRUCTURE
+================================================================================
+
+devmatch_bga/
+├── app/
+│   ├── api/
+│   │   └── medical/
+│   │       └── route.ts
+│   ├── components/
+│   │   ├── UnifiedDashboard.tsx
+│   │   ├── LoginSignup.tsx
+│   │   ├── PatientAppointments.tsx
+│   │   ├── MedicalStaffAppointments.tsx
+│   │   ├── ElderlyModeHome.tsx
+│   │   ├── TransportCoordination.tsx
+│   │   ├── CaregiverAccessRequest.tsx
+│   │   └── [other components]
+│   ├── context/
+│   │   └── AppContext.tsx
+│   ├── services/
+│   │   ├── grabApi.ts
+│   │   ├── accessControl.ts
+│   │   └── blockchainService.ts
+│   ├── types/
+│   │   ├── index.ts
+│   │   └── medical.ts
+│   ├── hooks/
+│   ├── medical-dashboard/
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── public/
+├── node_modules/
+├── package.json
+├── tsconfig.json
+├── tailwind.config.js
+├── next.config.js
+└── README.md
+
+================================================================================
+                         12. COMPONENT ARCHITECTURE
+================================================================================
+
+12.1 CORE COMPONENTS
+
+UnifiedDashboard.tsx:
+- Main dashboard orchestrator
+- Role-based rendering
+- Tab management
+- State coordination
+
+LoginSignup.tsx:
+- Authentication interface
+- Form validation
+- User registration
+- Demo data autofill
+
+12.2 ROLE-SPECIFIC COMPONENTS
+
+Patient Components:
+- PatientAppointments.tsx
+- ElderlyModeHome.tsx
+- ElderlyModeAppointments.tsx
+
+Medical Staff Components:
+- MedicalStaffAppointments.tsx
+- MedicalRecordsDashboard.tsx
+
+Family Member Components:
+- CaregiverAccessRequest.tsx
+- CaregiverModeInterface.tsx
+
+12.3 FEATURE COMPONENTS
+
+Transportation:
+- TransportCoordination.tsx
+- TransportationTracking.tsx
+
+Access Control:
+- AccessRequestApproval.tsx
+- CaregiverModeFAB.tsx
+
+Elderly Mode:
+- ElderlyConfirmationPopup.tsx
+- ElderlyModeHome.tsx
+
+================================================================================
+                                CONCLUSION
+================================================================================
+
+The BridgeCare medical application architecture provides a robust, scalable, and 
+secure foundation for comprehensive healthcare management. The system supports 
+multiple user roles, real-time updates, external integrations, and accessibility 
+features while maintaining data privacy and security standards.
+
+Key architectural strengths:
+- Modular component design
+- Role-based access control
+- Real-time data synchronization
+- External API integrations
+- Scalable database design
+- Security-first approach
+- Accessibility compliance
+
+Future enhancements:
+- Microservices architecture
+- Advanced analytics
+- AI-powered insights
+- Mobile app development
+- Advanced security features
+- Performance optimizations
+
+================================================================================

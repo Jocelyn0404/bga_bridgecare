@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Record Tracker - Health</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Dyslexic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Health Tracking</h1>
+            <p>Monitor your health metrics</p>
+        </header>
+
+        <div class="health-container">
+            <!-- Weight & Height Section -->
+            <section class="health-section">
+                <h2>Weight & Height</h2>
+                <form id="weightHeightForm" class="health-form">
+                    <div class="form-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" id="weight" name="weight" step="0.1" min="0" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm):</label>
+                        <input type="number" id="height" name="height" min="0">
+                    </div>
+                    <button type="submit" class="btn-secondary">Calculate BMI</button>
+                </form>
+                <div id="bmiResult" class="result-display"></div>
+            </section>
+
+            <!-- Menstruation Tracking (Female Only) -->
+            <section class="health-section" id="menstruationSection" style="display: none;">
+                <h2>Menstruation Tracking</h2>
+                <form id="menstruationForm" class="health-form">
+                    <div class="form-group">
+                        <label for="lastPeriod">Last Period Date:</label>
+                        <input type="date" id="lastPeriod" name="lastPeriod">
+                    </div>
+                    <div class="form-group">
+                        <label for="cycleLength">Cycle Length (days):</label>
+                        <input type="number" id="cycleLength" name="cycleLength" min="20" max="40" value="28">
+                    </div>
+                    <button type="submit" class="btn-secondary">Track Period</button>
+                </form>
+                <div id="periodReminder" class="reminder"></div>
+            </section>
+
+            <!-- Age-based Health Monitoring (30+) -->
+            <section class="health-section" id="ageHealthSection" style="display: none;">
+                <h2>Health Monitoring (30+)</h2>
+                <form id="ageHealthForm" class="health-form">
+                    <div class="form-group">
+                        <label for="cholesterol">Cholesterol Level (mg/dL):</label>
+                        <input type="number" id="cholesterol" name="cholesterol" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodPressure">Blood Pressure (mmHg):</label>
+                        <input type="text" id="bloodPressure" name="bloodPressure" placeholder="e.g., 120/80">
+                    </div>
+                    <div class="form-group">
+                        <label for="diabetes">Blood Sugar Level (mg/dL):</label>
+                        <input type="number" id="diabetes" name="diabetes" min="0">
+                    </div>
+                    <button type="submit" class="btn-secondary">Save Health Data</button>
+                </form>
+                <div id="healthReminder" class="reminder"></div>
+            </section>
+
+            <!-- Medical Check-up -->
+            <section class="health-section">
+                <h2>Medical Check-up</h2>
+                <form id="checkupForm" class="health-form">
+                    <div class="form-group">
+                        <label for="lastCheckup">Last Check-up Date:</label>
+                        <input type="date" id="lastCheckup" name="lastCheckup">
+                    </div>
+                    <button type="submit" class="btn-secondary">Save Check-up</button>
+                </form>
+                <div id="checkupReminder" class="reminder"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Navigation Icons -->
+    <nav class="bottom-nav">
+        <div class="nav-icon" onclick="window.location.href='index.html'">
+            <span>🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='profile.html'">
+            <span>👤</span>
+            <span class="nav-label">Profile</span>
+        </div>
+        <div class="nav-icon active">
+            <span>❤️</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='tracking.html'">
+            <span>📊</span>
+            <span class="nav-label">Tracking</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='settings.html'">
+            <span>⚙️</span>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+
+    <script src="health.js"></script>
+</body>
+</html> 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Record Tracker - Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Dyslexic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Settings</h1>
+            <p>Customize your experience</p>
+        </header>
+
+        <div class="settings-container">
+            <!-- Account Settings -->
+            <section class="settings-section">
+                <h2>Account</h2>
+                <div class="settings-item">
+                    <button id="logoutBtn" class="btn-danger">Logout</button>
+                </div>
+            </section>
+
+            <!-- Accessibility Settings -->
+            <section class="settings-section">
+                <h2>Accessibility</h2>
+                <div class="settings-item">
+                    <label for="elderlyMode">Elderly Mode (Larger Text):</label>
+                    <input type="checkbox" id="elderlyMode" class="toggle-switch">
+                </div>
+                <div class="settings-item">
+                    <label for="dyslexiaMode">Dyslexia-Friendly Font:</label>
+                    <input type="checkbox" id="dyslexiaMode" class="toggle-switch">
+                </div>
+                <div class="settings-item">
+                    <label for="darkMode">Dark Mode:</label>
+                    <input type="checkbox" id="darkMode" class="toggle-switch">
+                </div>
+                <div class="settings-item">
+                    <label for="voiceReader">Voice Reader:</label>
+                    <input type="checkbox" id="voiceReader" class="toggle-switch">
+                </div>
+            </section>
+
+            <!-- Font Size Settings -->
+            <section class="settings-section">
+                <h2>Font Size</h2>
+                <div class="settings-item">
+                    <label for="fontSize">Font Size:</label>
+                    <select id="fontSize" class="settings-select">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                        <option value="extra-large">Extra Large</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Feedback Section -->
+            <section class="settings-section">
+                <h2>Feedback</h2>
+                <form id="feedbackForm" class="feedback-form">
+                    <div class="form-group">
+                        <label for="feedbackType">Feedback Type:</label>
+                        <select id="feedbackType" name="feedbackType" required>
+                            <option value="">Select Type</option>
+                            <option value="bug">Bug Report</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="improvement">Improvement Suggestion</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackMessage">Message:</label>
+                        <textarea id="feedbackMessage" name="feedbackMessage" placeholder="Please describe your feedback..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Send Feedback</button>
+                </form>
+            </section>
+
+            <!-- App Information -->
+            <section class="settings-section">
+                <h2>App Information</h2>
+                <div class="settings-item">
+                    <p><strong>Version:</strong> 1.0.0</p>
+                    <p><strong>Last Updated:</strong> <span id="lastUpdated">2024</span></p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Navigation Icons -->
+    <nav class="bottom-nav">
+        <div class="nav-icon" onclick="window.location.href='index.html'">
+            <span>🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='profile.html'">
+            <span>👤</span>
+            <span class="nav-label">Profile</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='health.html'">
+            <span>❤️</span>
+            <span class="nav-label">Health</span>
+        </div>
+        <div class="nav-icon" onclick="window.location.href='tracking.html'">
+            <span>📊</span>
+            <span class="nav-label">Tracking</span>
+        </div>
+        <div class="nav-icon active">
+            <span>⚙️</span>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+
+    <script src="settings.js"></script>
+</body>
+</html> 
